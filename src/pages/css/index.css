@@ -1,0 +1,52 @@
+:root {
+  --top-bar: #1b1d23;
+  --sub-menu: #272c36;
+  --background: #2c313c;
+  --border: #343b48;
+  --click: #4f9fee;
+  --text: #949aa7;
+
+  overflow-y: hidden; /* hide vertical */
+  overflow-x: hidden; /* hide horizontal  */
+}
+
+nav {
+  -webkit-app-region: drag;
+  background-color: var(--top-bar);
+  color: var(--text);
+}
+
+nav > div > button {
+  border: none !important;
+  -webkit-app-region: no-drag !important;
+  background-color: var(--top-bar) !important;
+  color: white !important;
+}
+
+nav > div > button:active {
+  background-color: var(--click) !important;
+}
+
+aside {
+  height: 94vh;
+  background-color: var(--sub-menu);
+  color: var(--text);
+}
+
+.aplicationBar {
+  background-color: var(--background);
+}
+
+.logo {
+  background-color: white !important;
+  transition: transform 300ms ease-in-out, background-color 100ms ease-in-out !important;
+  display: inline-block;
+}
+
+.logo:active {
+  background-color: var(--text) !important;
+}
+
+main {
+  background-color: var(--background);
+}
