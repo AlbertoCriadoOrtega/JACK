@@ -81,71 +81,62 @@
       </aside>
       <main class="col-11 ps-5">
         <div class="col-12 pt-5 pb-3 ps-5 text-white d-flex flex-wrap">
-          <h1>How to use this database:</h1>
+          <h1>How to use this server:</h1>
           <p>
-            SQL (Structured Query Language) databases store data in
-            <strong>tables</strong> with fixed schemas using rows and columns.
-            They're ideal for structured data, relational queries, and ensuring
-            data integrity.
+            This is a basic HTTP server used to handle client requests and serve
+            responses. It's useful for hosting websites, APIs, or any service that
+            communicates over the HTTP protocol.
           </p>
-
+      
           <div class="pb-4 col-6">
             <h5 class="mt-4">🔗 Connection Information</h5>
             <ul class="ms-3">
-              <li class="fs-3">port: 5432</li>
-              <li class="fs-3">username: "admin"</li>
-              <li class="fs-3">password: "admin"</li>
+              <li class="fs-3">port: 8080</li>
+              <li class="fs-3">hostname: "localhost"</li>
+              <li class="fs-3">protocol: "http"</li>
             </ul>
           </div>
-
+      
           <div class="col-6">
-            <h5 class="mt-4 pb-4">📄 Sample Record/Table</h5>
+            <h5 class="mt-4 pb-4">📦 Sample Request</h5>
             <pre
               class="bg-dark text-white p-3 rounded col-8 ms-5"
               style="overflow-x: auto"
             >
-      -- Users table
-      CREATE TABLE users (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        email VARCHAR(100),
-        age INT,
-        is_active BOOLEAN,
-        roles TEXT[],
-        created_at TIMESTAMP
-      );
-     </pre
-            >
+      GET /api/status HTTP/1.1
+      Host: localhost:8080
+      Accept: application/json
+            </pre>
           </div>
         </div>
-
+      
         <div class="row col-12 d-flex justify-content-evenly mt-4 mb-4">
           <button
             type="button"
-            class="btn btn-outline-primary col-2"
-            aria-label="Start the database"
+            class="btn btn-outline-warning col-2"
+            aria-label="Start the server"
           >
             Start
           </button>
-
+      
           <button
             type="button"
-            class="btn btn-outline-primary col-2"
-            aria-label="Reinstall the database"
+            class="btn btn-outline-warning col-2"
+            aria-label="Restart the server"
           >
-            Reinstall
+            Restart
           </button>
-
+      
           <button
             type="button"
-            class="btn btn-outline-primary col-2"
-            onclick="window.open('https://www.postgresql.org/docs/')"
-            aria-label="Open SQL Documentation"
+            class="btn btn-outline-warning col-2"
+            onclick="window.open('https://developer.mozilla.org/en-US/docs/Web/HTTP')"
+            aria-label="Open HTTP Documentation"
           >
             Docs
           </button>
         </div>
-      </main>
+      </main>      
     </div>
   </body>
 

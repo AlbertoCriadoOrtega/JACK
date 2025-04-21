@@ -6,6 +6,7 @@
   <title>Hello World!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/mongo.css" />
 </head>
 
 <body>
@@ -31,13 +32,13 @@
   </nav>
 
   <div class="d-flex flex-wrap col-12">
-    <aside class="d-flex justify-content-center align-content-center col-1">
+    <aside class="d-flex justify-content-center align-content-center col-1 border-end border-4 border-secondary">
       <div class="d-flex flex-column mt-1 mb-4 col-8 mb-4 border-dark rounded-4" id="aplicationBar">
         <button class="btn p-2 mt-3 border-2 border-dark rounded-5 logo" id="homeBtn">
           <img src="../assets/home.png" class="img-fluid" alt="" />
         </button>
         <button class="btn p-2 mt-3 border-2 border-dark rounded-5 logo" id="httpServer">
-          <h3>Server <br> HTTP</h3>
+          <img src="../assets/falcon.png" class="img-fluid" alt="" />
         </button>
         <button class="btn p-2 mt-3 border-2 border-dark rounded-5 logo" id="mongoBtn">
           <img src="../assets/mongodb.png" class="img-fluid" alt="" />
@@ -50,8 +51,49 @@
         </button>
       </div>
     </aside>
-    <main>
-      <!-- here goes the content -->
+    <main class="col-11 ps-5">
+      <div class="col-12 pt-5 pb-3 ps-5 text-white d-flex flex-wrap">
+        <h1 class="display-4">
+          Welcome to <b class="text-uppercase">
+            <b class="text-warning">J</b><b class="text-success">a</b><b class="text-primary">c</b><b class="text-primary">k</b>
+          </b>
+        </h1>
+        <p class="fs-6 pt-3">
+          <strong>Jack</strong> is a local development environment designed to make backend setup fast and painless.
+          Similar to XAMPP, Jack comes bundled with an HTTP server and three ready-to-use databases —
+          PostgreSQL, MySQL, and MongoDB — all running in Docker containers. It's perfect for web development, API testing,
+          and database prototyping, all in one simple tool.
+        </p>
+    
+        <div class="mt-4">
+          <h3 class="text-warning">🧭 Navigation Overview</h3>
+          <p class="fs-6">Here's a quick overview of what each icon in the side menu does:</p>
+    
+          <ul class="fs-6">
+            <li>
+              🏠 <strong>Home</strong> — Brings you back to the dashboard where you can see the status of all services and quick actions.
+            </li>
+            <li>
+              🚀 <strong>HTTP Server (Falcon)</strong> — Launch and monitor your local HTTP server. Great for serving websites, APIs,
+              and local apps using the <code>http://localhost:8080</code> endpoint.
+            </li>
+            <li>
+              🍃 <strong>MongoDB</strong> — Start and manage a MongoDB instance via Docker. Ideal for working with NoSQL data structures.
+            </li>
+            <li>
+              🐘 <strong>PostgreSQL</strong> — A powerful, open-source SQL database. Great for structured data and advanced querying.
+            </li>
+            <li>
+              🗃️ <strong>MySQL</strong> — Another widely-used SQL database. Compatible with many existing tools and apps.
+            </li>
+          </ul>
+    
+          <p class="fs-6 mt-3">
+            All services are containerized using Docker, meaning they run independently and don't affect your system. You can start or stop each one
+            with a click, making development more modular and controlled.
+          </p>
+        </div>
+      </div>
     </main>
   </div>
 </body>

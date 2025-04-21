@@ -18,7 +18,7 @@ function changePage(mainWindow, path) {
   });
 
   ipcMain.on("changePageServer", () => {
-    mainWindow.loadFile(path.join("src/pages/Mongodb.html"));
+    mainWindow.loadFile(path.join("src/pages/Http.html"));
   });
 }
 
