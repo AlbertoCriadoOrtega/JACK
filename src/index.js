@@ -3,6 +3,8 @@ const path = require("node:path");
 const setupWindowActions = require("./logic/windowActions"); // Import the module
 const changePage = require("./logic/navActions");
 
+const buttonFunctionsSQL = require("./logic/sqlActions");
+
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
@@ -27,6 +29,7 @@ function createWindow() {
 
   changePage(mainWindow, path);
   setupWindowActions(mainWindow); // Use the extracted functionality
+  buttonFunctionsSQL();
 }
 
 app.whenReady().then(() => {

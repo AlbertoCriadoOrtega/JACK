@@ -18,6 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "dockerode": "^4.0.6",
     "electron-squirrel-startup": "^1.0.1"
   },
   "devDependencies": {

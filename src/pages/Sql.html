@@ -57,7 +57,7 @@
             class="btn p-2 mt-3 border-2 border-dark rounded-5 logo"
             id="httpServer"
           >
-          <img src="../assets/falcon.png" class="img-fluid" alt="" />
+            <img src="../assets/falcon.png" class="img-fluid" alt="" />
           </button>
           <button
             class="btn p-2 mt-3 border-2 border-dark rounded-5 logo"
@@ -124,6 +124,7 @@
             type="button"
             class="btn btn-outline-primary col-2"
             aria-label="Start the database"
+            id="startDatabaseBtn"
           >
             Start
           </button>
@@ -131,9 +132,10 @@
           <button
             type="button"
             class="btn btn-outline-primary col-2"
-            aria-label="Reinstall the database"
+            aria-label="open database workbench tool"
+            id="beekeperBtn"
           >
-            Reinstall
+            open database workbench tool
           </button>
 
           <button
@@ -150,6 +152,7 @@
   </body>
 
   <script defer src="../utils/ipcObject.js"></script>
+  <script defer src="../listeners/sqlListener.js"></script>
   <script defer src="../listeners/windowController.js"></script>
   <script defer src="../listeners/navController.js"></script>
   <link
