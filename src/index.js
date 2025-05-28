@@ -4,6 +4,7 @@ const setupWindowActions = require("./logic/windowActions"); // Import the modul
 const changePage = require("./logic/navActions");
 
 const buttonFunctionsSQL = require("./logic/sqlActions");
+const buttonFunctionsServer = require("./logic/serverActions");
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -30,6 +31,7 @@ function createWindow() {
   changePage(mainWindow, path);
   setupWindowActions(mainWindow); // Use the extracted functionality
   buttonFunctionsSQL();
+  buttonFunctionsServer();
 }
 
 app.whenReady().then(() => {

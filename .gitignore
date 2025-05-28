@@ -90,3 +90,6 @@ typings/
 
 # Electron-Forge
 out/
+
+src/server/pages/
+src/server/php/
