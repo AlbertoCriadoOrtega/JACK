@@ -2,6 +2,7 @@ const { ipcMain, dialog } = require("electron");
 const { spawn } = require("child_process");
 const path = require("path");
 const { exec } = require("child_process");
+const kill = require("tree-kill");
 
 let jarProcess = null;
 let startedShown = false;
@@ -10,12 +11,8 @@ let errorShown = false;
 function buttonFunctionsServer() {
   ipcMain.on("startServer", () => {
     if (jarProcess) {
-      exec("taskkill /F /IM java.exe", (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error al cerrar Java: ${error.message}`);
-          return;
-        }
-        console.log("Todos los procesos java.exe han sido cerrados.");
+      kill(jarProcess.pid, 'SIGKILL', (err) => {
+        if (err) console.error('Failed to kill process tree:', err);
       });
 
       jarProcess = null;
