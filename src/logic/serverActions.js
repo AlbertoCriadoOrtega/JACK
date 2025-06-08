@@ -11,18 +11,12 @@ let errorShown = false;
 function buttonFunctionsServer() {
   ipcMain.on("startServer", () => {
     if (jarProcess) {
-      kill(jarProcess.pid, 'SIGKILL', (err) => {
-        if (err) console.error('Failed to kill process tree:', err);
+      kill(jarProcess.pid, "SIGKILL", (err) => {
+        if (err) console.error("Failed to kill process tree:", err);
       });
-
       jarProcess = null;
       startedShown = false;
       errorShown = false;
-      dialog.showMessageBox({
-        type: "info",
-        title: "Servidor",
-        message: "El servidor se ha apagado correctamente",
-      });
       return;
     }
 
@@ -37,12 +31,6 @@ function buttonFunctionsServer() {
     jarProcess.stdout.on("data", (data) => {
       if (!startedShown) {
         startedShown = true;
-        dialog.showMessageBox({
-          type: "info",
-          title: "Servidor",
-          message: "El servidor ha iniciado correctamente",
-          buttons: ["OK"],
-        });
       }
     });
 
@@ -57,6 +45,10 @@ function buttonFunctionsServer() {
         });
       }
     });
+  });
+
+  ipcMain.on("openFolderBtn", () => {
+    exec("explorer.exe " + path.join(__dirname, "..", "server/pages"));
   });
 }
 

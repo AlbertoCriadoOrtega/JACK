@@ -5,6 +5,8 @@ const changePage = require("./logic/navActions");
 
 const buttonFunctionsSQL = require("./logic/sqlActions");
 const buttonFunctionsServer = require("./logic/serverActions");
+const buttonFunctionsPostgres = require("./logic/postgreActions");
+const buttonFunctionsMongo = require("./logic/mongoActions");
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -32,6 +34,8 @@ function createWindow() {
   setupWindowActions(mainWindow); // Use the extracted functionality
   buttonFunctionsSQL();
   buttonFunctionsServer();
+  buttonFunctionsPostgres();
+  buttonFunctionsMongo();
 }
 
 app.whenReady().then(() => {

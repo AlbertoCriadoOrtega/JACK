@@ -58,12 +58,6 @@ async function startMysqlContainer() {
     const container = docker.getContainer("SQL_DATABASE");
     await container.start();
     await grantAccess();
-    dialog.showMessageBox({
-      type: "info",
-      title: "Alert",
-      message: "MySQL started",
-      buttons: ["OK"],
-    });
   } catch (err) {
     if (err.statusCode === 409) {
       // Container already started - ignore or log if needed
@@ -83,13 +77,6 @@ async function stopMysqlContainer() {
   try {
     const container = docker.getContainer("SQL_DATABASE");
     await container.stop();
-
-    dialog.showMessageBox({
-      type: "info",
-      title: "Alert",
-      message: "MySQL stopped",
-      buttons: ["OK"],
-    });
   } catch (err) {
     dialog.showMessageBox({
       type: "info",
