@@ -165,15 +165,15 @@ function buttonFunctionsSQL() {
   ipcMain.on("startBeekeper", async () => {
     const exePath = path.resolve(
       __dirname,
-      "../utils/Beekeeper-Studio-5.2.10-portable.exe"
+      "../utils/BeekeeperStudioPortable.exe"
     );
 
     execFile(exePath, (error, stdout, stderr) => {
       if (error) {
-        console.error("Error al ejecutar el .exe:", error);
+        console.error("Error launching Beekeeper:", error);
         return;
       }
-      console.log("Salida estándar:", stdout);
+      console.log("Beekeeper output:", stdout);
     });
   });
 }

@@ -92,3 +92,5 @@ typings/
 out/
 
 src/server/pages/
+src/utils/beekeeper_studio_data/
+src/utils/BeekeeperStudioPortable.exe

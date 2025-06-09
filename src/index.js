@@ -7,6 +7,7 @@ const buttonFunctionsSQL = require("./logic/sqlActions");
 const buttonFunctionsServer = require("./logic/serverActions");
 const buttonFunctionsPostgres = require("./logic/postgreActions");
 const buttonFunctionsMongo = require("./logic/mongoActions");
+const beekeeperDownload = require("./logic/BeekeperDownload");
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -30,6 +31,7 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, "pages/index.html"));
 
+  beekeeperDownload();
   changePage(mainWindow, path);
   setupWindowActions(mainWindow); // Use the extracted functionality
   buttonFunctionsSQL();

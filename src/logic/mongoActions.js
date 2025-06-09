@@ -134,7 +134,7 @@ function buttonFunctionsMongo() {
   ipcMain.on("startBeekeper", async () => {
     const exePath = path.resolve(
       __dirname,
-      "../utils/Beekeeper-Studio-5.2.10-portable.exe"
+      "../utils/BeekeeperStudioPortable.exe"
     );
 
     execFile(exePath, (error, stdout, stderr) => {
