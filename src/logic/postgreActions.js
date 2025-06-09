@@ -168,6 +168,11 @@ function buttonFunctionsPostgres() {
       console.log("Beekeeper output:", stdout);
     });
   });
+
+  ipcMain.on("checkIfContainerIsRunningPostgre", async (event) => {
+    const isRunning = await checkIfContainerIsRunning();
+    event.sender.send("checkIfContainerIsRunningPostgreResponse", isRunning);
+  });
 }
 
 module.exports = buttonFunctionsPostgres;

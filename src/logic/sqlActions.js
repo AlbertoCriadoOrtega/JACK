@@ -176,6 +176,11 @@ function buttonFunctionsSQL() {
       console.log("Beekeeper output:", stdout);
     });
   });
+
+  ipcMain.on("checkIfContainerIsRunningSql", async (event) => {
+    const isRunning = await checkIfContainerIsRunning();
+    event.sender.send("checkIfContainerIsRunningSqlResponse", isRunning);
+  });
 }
 
 module.exports = buttonFunctionsSQL;

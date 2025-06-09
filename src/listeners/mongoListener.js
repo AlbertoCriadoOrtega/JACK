@@ -7,6 +7,14 @@ startDatabaseBtnMongo.addEventListener("click", () => {
   }
 });
 
-beekeperBtn.addEventListener("click", () => {
-  ipc.send("startBeekeper");
-});
+function checkIfContainerIsRunning() {
+  ipc.send("checkIfContainerIsRunningMongo");
+
+  ipc.on("checkIfContainerIsRunningMongoResponse", (event, isRunning) => {
+    if (isRunning) {
+      startDatabaseBtnMongo.innerText = "Stop";
+    }
+  });
+}
+
+checkIfContainerIsRunning();

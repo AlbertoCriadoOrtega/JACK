@@ -10,3 +10,15 @@ startDatabaseBtnPost.addEventListener("click", () => {
 beekeperBtn.addEventListener("click", () => {
   ipc.send("startBeekeper");
 });
+
+function checkIfContainerIsRunning() {
+  ipc.send("checkIfContainerIsRunningPostgre");
+
+  ipc.on("checkIfContainerIsRunningPostgreResponse", (event, isRunning) => {
+    if (isRunning) {
+      startDatabaseBtnPost.innerText = "Stop";
+    }
+  });
+}
+
+checkIfContainerIsRunning();

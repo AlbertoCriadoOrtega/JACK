@@ -10,3 +10,15 @@ startServerBtn.addEventListener("click", () => {
 openFolderBtn.addEventListener("click", () => {
   ipc.send("openFolderBtn");
 });
+
+function checkIfServerIsRunning() {
+  ipc.send("checkIfJarRunning");
+
+  ipc.on("checkIfJarRunningResponse", (event, isRunning) => {
+    if (isRunning) {
+      startServerBtn.innerText = "Stop";
+    }
+  });
+}
+
+checkIfServerIsRunning();

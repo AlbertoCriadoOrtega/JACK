@@ -145,6 +145,11 @@ function buttonFunctionsMongo() {
       console.log("Beekeeper output:", stdout);
     });
   });
+
+  ipcMain.on("checkIfContainerIsRunningMongo", async (event) => {
+    const isRunning = await checkIfContainerIsRunning();
+    event.sender.send("checkIfContainerIsRunningMongoResponse", isRunning);
+  });
 }
 
 module.exports = buttonFunctionsMongo;

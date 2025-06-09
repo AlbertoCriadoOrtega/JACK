@@ -1,16 +1,28 @@
 const { ipcMain, dialog } = require("electron");
-const { spawn } = require("child_process");
+const { spawn, exec } = require("child_process");
 const path = require("path");
-const { exec } = require("child_process");
 const kill = require("tree-kill");
 
 let jarProcess = null;
 let startedShown = false;
 let errorShown = false;
 
+function isJarRunning() {
+  if (!jarProcess) return false;
+
+  try {
+    process.kill(jarProcess.pid, 0); // check if process exists
+    return true;
+  } catch {
+    jarProcess = null;
+    return false;
+  }
+}
+
 function buttonFunctionsServer() {
   ipcMain.on("startServer", () => {
     if (jarProcess) {
+      // Stop the process if already running
       kill(jarProcess.pid, "SIGKILL", (err) => {
         if (err) console.error("Failed to kill process tree:", err);
       });
@@ -28,10 +40,18 @@ function buttonFunctionsServer() {
 
     jarProcess = spawn("java", ["-jar", jarPath], { cwd: workingDir });
 
+    jarProcess.on("exit", (code, signal) => {
+      jarProcess = null;
+      startedShown = false;
+      errorShown = false;
+    });
+
     jarProcess.stdout.on("data", (data) => {
       if (!startedShown) {
         startedShown = true;
+        // You can optionally send an event to renderer that server started
       }
+      console.log(`Server stdout: ${data.toString()}`);
     });
 
     jarProcess.stderr.on("data", (data) => {
@@ -44,7 +64,12 @@ function buttonFunctionsServer() {
           buttons: ["OK"],
         });
       }
+      console.error(`Server stderr: ${data.toString()}`);
     });
+  });
+
+  ipcMain.on("checkIfJarRunning", (event) => {
+    event.sender.send("checkIfJarRunningResponse", isJarRunning());
   });
 
   ipcMain.on("openFolderBtn", () => {
