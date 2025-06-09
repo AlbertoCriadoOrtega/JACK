@@ -24,6 +24,7 @@ const dockerFile = {
   },
 };
 
+// Ensures the MySQL image is available locally, pulls it if not
 async function ensureImage() {
   const images = await docker.listImages();
   const exists = images.some(
@@ -37,8 +38,8 @@ async function ensureImage() {
         if (err) return reject(err);
         docker.modem.followProgress(
           stream,
-          () => resolve(),
-          () => {}
+          () => resolve(), // Resolve when download finishes
+          () => {} // Progress callback (unused)
         );
       });
     });
@@ -48,19 +49,20 @@ async function ensureImage() {
   }
 }
 
+// Checks if a container named "SQL_DATABASE" already exists
 async function containerExists() {
   const containers = await docker.listContainers({ all: true });
   return containers.some((c) => c.Names.includes("/SQL_DATABASE"));
 }
 
+// Starts the MySQL container and grants access to the 'admin' user
 async function startMysqlContainer() {
   try {
     const container = docker.getContainer("SQL_DATABASE");
     await container.start();
-    await grantAccess();
+    await grantAccess(); // Optional: ensure user has full privileges
   } catch (err) {
     if (err.statusCode === 409) {
-      // Container already started - ignore or log if needed
       console.log("Container already running.");
     } else {
       dialog.showMessageBox({
@@ -73,6 +75,7 @@ async function startMysqlContainer() {
   }
 }
 
+// Stops the MySQL container
 async function stopMysqlContainer() {
   try {
     const container = docker.getContainer("SQL_DATABASE");
@@ -87,6 +90,7 @@ async function stopMysqlContainer() {
   }
 }
 
+// Checks if the MySQL container is currently running
 async function checkIfContainerIsRunning() {
   try {
     const container = docker.getContainer("SQL_DATABASE");
@@ -103,6 +107,7 @@ async function checkIfContainerIsRunning() {
   }
 }
 
+// Initializes the container (pulls image and creates container if not present)
 async function initMysqlContainer() {
   await ensureImage();
 
@@ -115,6 +120,7 @@ async function initMysqlContainer() {
   }
 }
 
+// Grants all privileges to 'admin' user for external access
 async function grantAccess() {
   const container = docker.getContainer("SQL_DATABASE");
 
@@ -131,6 +137,7 @@ async function grantAccess() {
 
   const stream = await exec.start({});
 
+  // Collect and return output from command
   return new Promise((resolve, reject) => {
     let output = "";
     stream.on("data", (chunk) => (output += chunk.toString()));
@@ -139,8 +146,9 @@ async function grantAccess() {
   });
 }
 
+// Main function to bind buttons/events for MySQL controls
 function buttonFunctionsSQL() {
-  // Initialize image and container BEFORE any button press
+  // Initialize the image and container on app start
   initMysqlContainer()
     .then(() => {
       console.log("MySQL container ready.");
@@ -149,7 +157,7 @@ function buttonFunctionsSQL() {
       console.error("Init failed:", err);
     });
 
-  // Button event handler only starts/stops container
+  // Toggle MySQL container (start or stop)
   ipcMain.on("startDatabaseBtn", async () => {
     console.log("Try to start/stop database");
 
@@ -162,6 +170,7 @@ function buttonFunctionsSQL() {
     }
   });
 
+  // Launch Beekeeper Studio for GUI DB management
   ipcMain.on("startBeekeper", async () => {
     const exePath = path.resolve(
       __dirname,
@@ -177,10 +186,12 @@ function buttonFunctionsSQL() {
     });
   });
 
+  // Check MySQL container runtime state and respond to renderer
   ipcMain.on("checkIfContainerIsRunningSql", async (event) => {
     const isRunning = await checkIfContainerIsRunning();
     event.sender.send("checkIfContainerIsRunningSqlResponse", isRunning);
   });
 }
 
+// Export the buttonFunctionsSQL to be used in main process
 module.exports = buttonFunctionsSQL;

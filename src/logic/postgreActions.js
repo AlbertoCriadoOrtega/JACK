@@ -19,21 +19,23 @@ const dockerFile = {
   },
 };
 
+// Ensure PostgreSQL image (postgres:15) exists locally
 async function ensureImage() {
-  const images = await docker.listImages();
+  const images = await docker.listImages(); // List all Docker images
   const exists = images.some(
     (img) => img.RepoTags && img.RepoTags.includes("postgres:15")
   );
 
   if (!exists) {
+    // Pull image if it doesn't exist
     console.log("Pulling PostgreSQL image...");
     await new Promise((resolve, reject) => {
       docker.pull("postgres:15", (err, stream) => {
-        if (err) return reject(err);
+        if (err) return reject(err); // Handle error
         docker.modem.followProgress(
           stream,
-          () => resolve(),
-          () => {}
+          () => resolve(), // Resolve when done
+          () => {} // Ignore progress
         );
       });
     });
@@ -43,20 +45,23 @@ async function ensureImage() {
   }
 }
 
+// Check if container with name "POSTGRES_DATABASE" exists
 async function containerExists() {
-  const containers = await docker.listContainers({ all: true });
+  const containers = await docker.listContainers({ all: true }); // List all containers
   return containers.some((c) => c.Names.includes("/POSTGRES_DATABASE"));
 }
 
+// Start PostgreSQL container and grant superuser access to admin
 async function startPostgresContainer() {
   try {
     const container = docker.getContainer("POSTGRES_DATABASE");
-    await container.start();
-    await grantAccess();
+    await container.start(); // Start the container
+    await grantAccess(); // Grant superuser access to 'admin'
   } catch (err) {
     if (err.statusCode === 409) {
       console.log("Container already running.");
     } else {
+      // Show error dialog if start fails
       dialog.showMessageBox({
         type: "info",
         title: "Alert",
@@ -67,11 +72,13 @@ async function startPostgresContainer() {
   }
 }
 
+// Stop PostgreSQL container
 async function stopPostgresContainer() {
   try {
     const container = docker.getContainer("POSTGRES_DATABASE");
-    await container.stop();
+    await container.stop(); // Stop container
   } catch (err) {
+    // Show error dialog if stop fails
     dialog.showMessageBox({
       type: "info",
       title: "Alert",
@@ -81,12 +88,14 @@ async function stopPostgresContainer() {
   }
 }
 
+// Check if PostgreSQL container is running
 async function checkIfContainerIsRunning() {
   try {
     const container = docker.getContainer("POSTGRES_DATABASE");
-    const state = await container.inspect();
-    return state.State.Running;
+    const state = await container.inspect(); // Inspect container status
+    return state.State.Running; // Return true if running
   } catch (err) {
+    // Show error dialog if check fails
     dialog.showMessageBox({
       type: "info",
       title: "Alert",
@@ -97,18 +106,20 @@ async function checkIfContainerIsRunning() {
   }
 }
 
+// Initialize the PostgreSQL container: pull image and create if needed
 async function initPostgresContainer() {
-  await ensureImage();
+  await ensureImage(); // Make sure image is available
 
-  const exists = await containerExists();
+  const exists = await containerExists(); // Check if container exists
   if (!exists) {
-    await docker.createContainer(dockerFile);
+    await docker.createContainer(dockerFile); // Create new container
     console.log("PostgreSQL container created.");
   } else {
     console.log("PostgreSQL container already exists.");
   }
 }
 
+// Grant superuser privileges to the 'admin' user inside the PostgreSQL container
 async function grantAccess() {
   const container = docker.getContainer("POSTGRES_DATABASE");
 
@@ -117,14 +128,15 @@ async function grantAccess() {
   `;
 
   const exec = await container.exec({
-    Cmd: ["psql", "-U", "admin", "-c", sql],
-    Env: ["PGPASSWORD=admin"],
+    Cmd: ["psql", "-U", "admin", "-c", sql], // Execute SQL as admin
+    Env: ["PGPASSWORD=admin"], // Set password for authentication
     AttachStdout: true,
     AttachStderr: true,
   });
 
-  const stream = await exec.start({});
+  const stream = await exec.start({}); // Start the command
 
+  // Collect output and resolve when done
   return new Promise((resolve, reject) => {
     let output = "";
     stream.on("data", (chunk) => (output += chunk.toString()));
@@ -133,7 +145,9 @@ async function grantAccess() {
   });
 }
 
+// Setup all button event handlers for PostgreSQL
 function buttonFunctionsPostgres() {
+  // Initialize container on app start
   initPostgresContainer()
     .then(() => {
       console.log("PostgreSQL container ready.");
@@ -142,18 +156,20 @@ function buttonFunctionsPostgres() {
       console.error("Init failed:", err);
     });
 
+  // Start/Stop PostgreSQL container on button click
   ipcMain.on("startDatabaseBtnPost", async () => {
     console.log("Try to start/stop PostgreSQL");
 
     const isRunning = await checkIfContainerIsRunning();
 
     if (isRunning) {
-      await stopPostgresContainer();
+      await stopPostgresContainer(); // Stop if running
     } else {
-      await startPostgresContainer();
+      await startPostgresContainer(); // Start if not running
     }
   });
 
+  // Launch Beekeeper Studio (PostgreSQL GUI tool)
   ipcMain.on("startBeekeper", async () => {
     const exePath = path.resolve(
       __dirname,
@@ -169,10 +185,12 @@ function buttonFunctionsPostgres() {
     });
   });
 
+  // Check if PostgreSQL container is running and send result back to renderer
   ipcMain.on("checkIfContainerIsRunningPostgre", async (event) => {
     const isRunning = await checkIfContainerIsRunning();
     event.sender.send("checkIfContainerIsRunningPostgreResponse", isRunning);
   });
 }
 
+// Export the main function for use in other parts of the app
 module.exports = buttonFunctionsPostgres;
